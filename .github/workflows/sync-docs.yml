@@ -1,0 +1,19 @@
+﻿name: Sync API docs to Document360
+
+on:
+  push:
+    branches: [main]
+    paths: ['nova-user-management-api.yaml']
+
+jobs:
+  resync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      - run: npm install d360 -g
+      - name: Resync to Document360
+        run: |
+          d360 apidocs:resync --userId=${{ secrets.DOCUMENT360_USER_ID }} --apiReferenceId=${{ secrets.DOCUMENT360_API_REFERENCE_ID }} --apiKey=${{ secrets.DOCUMENT360_API_KEY }} --path=./nova-user-management-api.yaml
